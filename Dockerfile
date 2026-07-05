@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Nakili pom.xml na pakua dependencies kwanza (kuharakisha build zijazo)
 COPY pom.xml .
-RUN mvc dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Nakili source code zote na jenga faili la jar
 COPY src ./src
