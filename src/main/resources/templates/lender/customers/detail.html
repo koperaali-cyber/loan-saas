@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Customer Details')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('customers')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Customer Details', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2 th:text="${customer.fullName}">Customer</h2>
+                    <p>Borrower profile and loan history.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{'/lender/customers/' + ${customer.id} + '/edit'}" class="btn btn-ghost">Edit</a>
+                    <a th:href="@{'/lender/loans/new'}" class="btn btn-primary">New loan</a>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="profile-hero">
+                                <img th:if="${customer.photo != null}" class="big-avatar" th:src="@{'/uploads/' + ${customer.photo}}" alt="">
+                                <div th:unless="${customer.photo != null}" class="big-avatar" th:text="${#strings.substring(customer.fullName,0,1)}">C</div>
+                                <div style="flex:1;">
+                                    <div class="h-name" th:text="${customer.fullName}">Name</div>
+                                    <div class="h-sub" th:text="${customer.phone}">phone</div>
+                                    <div style="margin-top:8px;">
+                                        <span th:replace="~{fragments/layout :: riskBadge(${riskLevel})}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mini-stats">
+                                <div class="mini-stat"><div class="v" th:text="${loanCount}">0</div><div class="l">Total loans</div></div>
+                                <div class="mini-stat"><div class="v" th:text="${paidCount}">0</div><div class="l">Paid off</div></div>
+                                <div class="mini-stat"><div class="v" th:text="${lateCount}">0</div><div class="l">Late / default</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-head"><h3>Details</h3></div>
+                        <div class="card-body">
+                            <div class="info-list">
+                                <div class="info-row"><span class="k">Phone</span><span class="v" th:text="${customer.phone}">—</span></div>
+                                <div class="info-row"><span class="k">Alt. phone</span><span class="v" th:text="${customer.alternativePhone != null and !customer.alternativePhone.isEmpty() ? customer.alternativePhone : '—'}">—</span></div>
+                                <div class="info-row"><span class="k">NIDA</span><span class="v" th:text="${customer.nida != null ? customer.nida : '—'}">—</span></div>
+                                <div class="info-row"><span class="k">Registered</span><span class="v" th:text="${#temporals.format(customer.createdAt, 'dd MMM yyyy')}">—</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head"><h3>Loan history</h3></div>
+                    <div class="card-body flush">
+                        <div class="table-wrap">
+                            <table class="data">
+                                <thead>
+                                <tr><th>Amount</th><th>Balance</th><th>Due</th><th>Status</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="ln : ${loans}" th:attr="data-href=@{'/lender/loans/' + ${ln.id}}">
+                                    <td class="num money-num" th:text="${#numbers.formatDecimal(ln.amount, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                    <td class="num money-num" th:text="${#numbers.formatDecimal(ln.remainingBalance, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                    <td th:text="${#temporals.format(ln.dueDate, 'dd MMM yyyy')}">due</td>
+                                    <td><span th:replace="~{fragments/layout :: statusBadge(${ln.status})}"></span></td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(loans)}">
+                                    <td colspan="4" class="t-empty"><div>No loans for this customer yet.</div></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

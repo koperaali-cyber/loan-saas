@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Admin Dashboard')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: adminSidebar('dashboard')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Dashboard', 'Super Admin Console')}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Platform overview</h2>
+                    <p>Monitor every lender, customer and loan across the platform.</p>
+                </div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat">
+                    <div class="ic ic-brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg></div>
+                    <div class="val" th:text="${totalLenders}">0</div>
+                    <div class="lbl">Total lenders</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-warn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                    <div class="val" th:text="${pendingLenders}">0</div>
+                    <div class="lbl">Pending approval</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-money"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <div class="val" th:text="${activeLenders}">0</div>
+                    <div class="lbl">Active lenders</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-danger"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                    <div class="val" th:text="${suspendedLenders}">0</div>
+                    <div class="lbl">Suspended</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-info"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+                    <div class="val" th:text="${totalCustomers}">0</div>
+                    <div class="lbl">Total customers</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+                    <div class="val" th:text="${totalLoans}">0</div>
+                    <div class="lbl">Total loans</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-money"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <div class="val money-num tzs" th:text="${#numbers.formatDecimal(totalIssued, 0, 'COMMA', 0, 'POINT')}">0</div>
+                    <div class="lbl">Money issued</div>
+                </div>
+                <div class="stat">
+                    <div class="ic ic-money"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <div class="val money-num tzs" th:text="${#numbers.formatDecimal(totalCollected, 0, 'COMMA', 0, 'POINT')}">0</div>
+                    <div class="lbl">Money collected</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-head">
+                        <h3>Pending lender approvals</h3>
+                        <a th:href="@{/admin/lenders/pending}" class="btn btn-ghost btn-sm">View all</a>
+                    </div>
+                    <div class="card-body flush">
+                        <div class="table-wrap">
+                            <table class="data">
+                                <thead>
+                                <tr><th>Business</th><th>Owner</th><th>Phone</th><th></th></tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="l : ${pendingList}">
+                                    <td>
+                                        <div class="cell-user">
+                                            <div class="avatar" th:text="${#strings.substring(l.businessName,0,1)}">B</div>
+                                            <div><div class="nm" th:text="${l.businessName}">Business</div></div>
+                                        </div>
+                                    </td>
+                                    <td th:text="${l.user.fullName}">Owner</td>
+                                    <td th:text="${l.user.phone}">+255</td>
+                                    <td><a th:href="@{'/admin/lenders/' + ${l.id}}" class="btn btn-primary btn-sm">Review</a></td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(pendingList)}">
+                                    <td colspan="4" class="t-empty">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        <div>No pending approvals. All caught up!</div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head"><h3>Recent activity</h3></div>
+                    <div class="card-body">
+                        <div class="info-list" th:if="${!#lists.isEmpty(recentActivities)}">
+                            <div class="info-row" th:each="a : ${recentActivities}">
+                                <span class="k" th:text="${a.action}">Action</span>
+                                <span class="v" style="font-weight:500;color:var(--muted);" th:text="${#temporals.format(a.createdAt, 'dd MMM, HH:mm')}">time</span>
+                            </div>
+                        </div>
+                        <div class="t-empty" th:if="${#lists.isEmpty(recentActivities)}">
+                            <div>No activity yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Record Payment')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('payments')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Record Payment', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Record a payment</h2>
+                    <p>The loan balance and status update automatically.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/lender/payments}" class="btn btn-ghost">Back</a>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(loans)}" class="alert alert-info">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>No loans available. <a th:href="@{/lender/loans/new}" style="font-weight:600;text-decoration:underline;">Create a loan</a> first.</span>
+            </div>
+
+            <div class="card" style="max-width:620px;">
+                <div class="card-body">
+                    <form th:action="@{/lender/payments}" th:object="${payment}" method="post">
+                        <div class="field full" style="margin-bottom:16px;">
+                            <label>Loan <span class="req">*</span></label>
+                            <select th:field="*{loanId}" th:classappend="${#fields.hasErrors('loanId')} ? 'invalid'">
+                                <option value="">— Select a loan —</option>
+                                <option th:each="ln : ${loans}" th:value="${ln.id}"
+                                        th:text="${ln.customer.fullName} + ' — balance ' + ${#numbers.formatDecimal(ln.remainingBalance, 0, 'COMMA', 0, 'POINT')} + ' TZS'">Loan</option>
+                            </select>
+                            <span class="err" th:if="${#fields.hasErrors('loanId')}" th:errors="*{loanId}"></span>
+                        </div>
+                        <div class="field full" style="margin-bottom:16px;">
+                            <label>Amount paid (TZS) <span class="req">*</span></label>
+                            <input type="number" th:field="*{amountPaid}" th:classappend="${#fields.hasErrors('amountPaid')} ? 'invalid'" placeholder="e.g. 100000" step="any" min="1">
+                            <span class="err" th:if="${#fields.hasErrors('amountPaid')}" th:errors="*{amountPaid}"></span>
+                        </div>
+                        <div class="field full">
+                            <label>Payment date <span class="req">*</span></label>
+                            <input type="date" th:field="*{paymentDate}" th:classappend="${#fields.hasErrors('paymentDate')} ? 'invalid'">
+                            <span class="err" th:if="${#fields.hasErrors('paymentDate')}" th:errors="*{paymentDate}"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-money" th:disabled="${#lists.isEmpty(loans)}">Record payment</button>
+                            <a th:href="@{/lender/payments}" class="btn btn-ghost">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

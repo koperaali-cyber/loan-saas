@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Sign in')}"></head>
+<body>
+
+<div class="auth-page">
+    <aside class="auth-aside">
+        <div class="auth-brand">
+            <div class="logo">L</div>
+            <div class="name">LoanSaaS</div>
+        </div>
+        <div class="auth-hero">
+            <h1>Welcome back to your lending desk.</h1>
+            <p>Sign in to manage customers, issue loans and track repayments across your microfinance business.</p>
+            <div class="auth-features">
+                <div class="auth-feature">
+                    <span class="dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Real-time loan &amp; repayment tracking
+                </div>
+                <div class="auth-feature">
+                    <span class="dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Automatic risk scoring &amp; fraud checks
+                </div>
+                <div class="auth-feature">
+                    <span class="dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    PDF &amp; Excel reporting
+                </div>
+            </div>
+        </div>
+        <div class="auth-foot">Secure multi-tenant platform · Dar es Salaam, Tanzania</div>
+    </aside>
+
+    <main class="auth-main">
+        <div class="auth-card">
+            <div class="mobile-brand">
+                <div class="logo">L</div>
+                <div class="name">LoanSaaS</div>
+            </div>
+            <h2>Sign in</h2>
+            <p class="lead">Enter your phone number and password to continue.</p>
+
+            <div class="alert alert-success" th:if="${param.registered}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>Registration successful! Your account is pending approval.</span>
+            </div>
+            <div class="alert alert-success" th:if="${success}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span th:text="${success}"></span>
+            </div>
+            <div class="alert alert-error" th:if="${param.error}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Invalid phone or password, or your account is not yet approved.</span>
+            </div>
+            <div class="alert alert-info" th:if="${param.logout}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>You have been signed out.</span>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="field full" style="margin-bottom:16px;">
+                    <label for="phone">Phone number</label>
+                    <input type="text" id="phone" name="phone" placeholder="+255700000000" required autofocus>
+                </div>
+                <div class="field full" style="margin-bottom:8px;">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:16px;">Sign in</button>
+            </form>
+
+            <div class="auth-switch">
+                Don't have an account? <a th:href="@{/register}">Register your business</a>
+            </div>
+
+            <div class="demo-note">
+                <strong>Demo accounts</strong>
+                Super Admin — <code>+255700000000</code> / <code>admin123</code><br>
+                Lender — <code>+255712345678</code> / <code>lender123</code>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

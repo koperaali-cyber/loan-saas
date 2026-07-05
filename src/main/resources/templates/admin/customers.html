@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('All Customers')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: adminSidebar('customers')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Customers', 'Super Admin Console')}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>All customers</h2>
+                    <p>Every borrower registered across all lenders.</p>
+                </div>
+                <div class="actions">
+                    <div class="search-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Search customers..." data-table-filter="custTable">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body flush">
+                    <div class="table-wrap">
+                        <table class="data" id="custTable">
+                            <thead>
+                            <tr><th data-sort>Customer</th><th data-sort>NIDA</th><th data-sort>Phone</th><th data-sort>Lender</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="c : ${customers}">
+                                <td>
+                                    <div class="cell-user">
+                                        <div class="avatar" th:text="${#strings.substring(c.fullName,0,1)}">C</div>
+                                        <div><div class="nm" th:text="${c.fullName}">Name</div></div>
+                                    </div>
+                                </td>
+                                <td th:text="${c.nida != null ? c.nida : '—'}">—</td>
+                                <td th:text="${c.phone}">+255</td>
+                                <td th:text="${c.lender.businessName}">Lender</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(customers)}">
+                                <td colspan="4" class="t-empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                    <div>No customers registered yet.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

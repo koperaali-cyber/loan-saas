@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Customers')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('customers')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Customers', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Customers</h2>
+                    <p>Your registered borrowers.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/lender/customers/new}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add customer
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <form th:action="@{/lender/customers}" method="get" class="search-box" style="margin:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" name="q" th:value="${q}" placeholder="Search by name or phone...">
+                    </form>
+                    <span class="sub" th:text="${#lists.size(customers)} + ' customer(s)'">0</span>
+                </div>
+                <div class="card-body flush">
+                    <div class="table-wrap">
+                        <table class="data">
+                            <thead>
+                            <tr><th data-sort>Customer</th><th data-sort>NIDA</th><th data-sort>Phone</th><th>Registered</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="c : ${customers}">
+                                <td>
+                                    <div class="cell-user">
+                                        <img th:if="${c.photo != null}" class="avatar" th:src="@{'/uploads/' + ${c.photo}}" alt="">
+                                        <div th:unless="${c.photo != null}" class="avatar" th:text="${#strings.substring(c.fullName,0,1)}">C</div>
+                                        <div>
+                                            <div class="nm" th:text="${c.fullName}">Name</div>
+                                            <div class="ph" th:if="${c.alternativePhone != null and !c.alternativePhone.isEmpty()}" th:text="'Alt: ' + ${c.alternativePhone}">alt</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td th:text="${c.nida != null ? c.nida : '—'}">—</td>
+                                <td th:text="${c.phone}">+255</td>
+                                <td th:text="${#temporals.format(c.createdAt, 'dd MMM yyyy')}">date</td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a th:href="@{'/lender/customers/' + ${c.id}}" class="icon-btn" title="View">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        </a>
+                                        <a th:href="@{'/lender/customers/' + ${c.id} + '/edit'}" class="icon-btn" title="Edit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                                        </a>
+                                        <form th:action="@{'/lender/customers/' + ${c.id} + '/delete'}" method="post"
+                                              data-confirm="Delete this customer?" style="display:inline;">
+                                            <button type="submit" class="icon-btn danger" title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(customers)}">
+                                <td colspan="5" class="t-empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                    <div th:text="${q != null and !q.isEmpty()} ? 'No customers match your search.' : 'No customers yet. Add your first borrower.'">No customers.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

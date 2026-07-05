@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Loan Details')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('loans')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Loan Details', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2 th:text="'Loan #' + ${loan.id}">Loan</h2>
+                    <p th:text="'Borrower: ' + ${loan.customer.fullName}">Borrower</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/lender/loans}" class="btn btn-ghost">Back</a>
+                    <a th:if="${loan.status.name() != 'PAID'}" th:href="@{'/lender/payments/new?loanId=' + ${loan.id}}" class="btn btn-money">Record payment</a>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h3>Loan summary</h3>
+                            <span th:replace="~{fragments/layout :: statusBadge(${loan.status})}"></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-list">
+                                <div class="info-row"><span class="k">Principal amount</span><span class="v money-num tzs" th:text="${#numbers.formatDecimal(loan.amount, 0, 'COMMA', 0, 'POINT')}">0</span></div>
+                                <div class="info-row"><span class="k">Interest rate</span><span class="v" th:text="${#numbers.formatDecimal(loan.interestRate, 0, 2)} + '%'">0%</span></div>
+                                <div class="info-row"><span class="k">Total repayment</span><span class="v money-num tzs" th:text="${#numbers.formatDecimal(loan.totalRepayment, 0, 'COMMA', 0, 'POINT')}">0</span></div>
+                                <div class="info-row"><span class="k">Amount paid</span><span class="v money-num tzs" style="color:var(--money);" th:text="${#numbers.formatDecimal(loan.amountPaid, 0, 'COMMA', 0, 'POINT')}">0</span></div>
+                                <div class="info-row"><span class="k">Remaining balance</span><span class="v money-num tzs" style="color:var(--danger);" th:text="${#numbers.formatDecimal(loan.remainingBalance, 0, 'COMMA', 0, 'POINT')}">0</span></div>
+                                <div class="info-row"><span class="k">Duration</span><span class="v" th:text="${loan.duration} + ' months'">0</span></div>
+                                <div class="info-row"><span class="k">Start date</span><span class="v" th:text="${#temporals.format(loan.startDate, 'dd MMM yyyy')}">—</span></div>
+                                <div class="info-row"><span class="k">Due date</span><span class="v" th:text="${#temporals.format(loan.dueDate, 'dd MMM yyyy')}">—</span></div>
+                            </div>
+
+                            <div class="form-actions" th:if="${loan.status.name() != 'PAID' and loan.status.name() != 'DEFAULTED'}">
+                                <form th:action="@{'/lender/loans/' + ${loan.id} + '/default'}" method="post"
+                                      data-confirm="Mark this loan as defaulted?">
+                                    <button type="submit" class="btn btn-warn btn-sm">Mark as defaulted</button>
+                                </form>
+                                <form th:action="@{'/lender/loans/' + ${loan.id} + '/delete'}" method="post"
+                                      data-confirm="Delete this loan and its payments? This cannot be undone.">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete loan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head"><h3>Payment history</h3></div>
+                    <div class="card-body flush">
+                        <div class="table-wrap">
+                            <table class="data">
+                                <thead>
+                                <tr><th>Date</th><th>Amount</th><th>Balance after</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="p : ${payments}">
+                                    <td th:text="${#temporals.format(p.paymentDate, 'dd MMM yyyy')}">date</td>
+                                    <td class="num money-num" th:text="${#numbers.formatDecimal(p.amountPaid, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                    <td class="num money-num" th:text="${p.balanceAfter != null ? #numbers.formatDecimal(p.balanceAfter, 0, 'COMMA', 0, 'POINT') : '—'}">0</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(payments)}">
+                                    <td colspan="3" class="t-empty"><div>No payments recorded yet.</div></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

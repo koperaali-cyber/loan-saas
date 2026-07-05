@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('New Loan')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('loans')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('New Loan', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Issue a new loan</h2>
+                    <p>Repayment and interest are calculated automatically.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/lender/loans}" class="btn btn-ghost">Back</a>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(customers)}" class="alert alert-info">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>You need at least one customer before issuing a loan. <a th:href="@{/lender/customers/new}" style="font-weight:600;text-decoration:underline;">Add a customer</a> first.</span>
+            </div>
+
+            <div class="card" style="max-width:820px;">
+                <div class="card-body">
+                    <form th:action="@{/lender/loans}" th:object="${loan}" method="post">
+                        <div class="form-grid">
+                            <div class="field full">
+                                <label>Customer <span class="req">*</span></label>
+                                <select th:field="*{customerId}" th:classappend="${#fields.hasErrors('customerId')} ? 'invalid'">
+                                    <option value="">— Select a customer —</option>
+                                    <option th:each="c : ${customers}" th:value="${c.id}"
+                                            th:text="${c.fullName} + ' (' + ${c.phone} + ')'">Customer</option>
+                                </select>
+                                <span class="err" th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}"></span>
+                            </div>
+
+                            <div class="field">
+                                <label>Loan amount (TZS) <span class="req">*</span></label>
+                                <input type="number" id="loanAmount" th:field="*{amount}" th:classappend="${#fields.hasErrors('amount')} ? 'invalid'" placeholder="e.g. 500000" step="any" min="1000">
+                                <span class="err" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+                            </div>
+                            <div class="field">
+                                <label>Interest rate (%) <span class="req">*</span></label>
+                                <input type="number" id="loanRate" th:field="*{interestRate}" th:classappend="${#fields.hasErrors('interestRate')} ? 'invalid'" placeholder="e.g. 10" step="any" min="0">
+                                <span class="err" th:if="${#fields.hasErrors('interestRate')}" th:errors="*{interestRate}"></span>
+                            </div>
+                            <div class="field">
+                                <label>Duration (months) <span class="req">*</span></label>
+                                <input type="number" id="loanDuration" th:field="*{duration}" th:classappend="${#fields.hasErrors('duration')} ? 'invalid'" placeholder="e.g. 6" min="1">
+                                <span class="err" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></span>
+                            </div>
+                            <div class="field">
+                                <label>Start date <span class="req">*</span></label>
+                                <input type="date" id="loanStart" th:field="*{startDate}" th:classappend="${#fields.hasErrors('startDate')} ? 'invalid'">
+                                <span class="err" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+                            </div>
+                            <div class="field full">
+                                <label>Due date <span class="hint">(auto-calculated, editable)</span></label>
+                                <input type="date" id="loanDue" th:field="*{dueDate}">
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="mini-stats" style="grid-template-columns:1fr 1fr;">
+                            <div class="mini-stat">
+                                <div class="l">Interest</div>
+                                <div class="v money-num" id="calcInterest" style="color:var(--warn);">0 TZS</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="l">Total repayment</div>
+                                <div class="v money-num" id="calcTotal" style="color:var(--money);">0 TZS</div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" th:disabled="${#lists.isEmpty(customers)}">Create loan</button>
+                            <a th:href="@{/lender/loans}" class="btn btn-ghost">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Access denied')}"></head>
+<body>
+
+<div style="min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg);">
+    <div class="card" style="max-width:440px;text-align:center;">
+        <div class="card-body">
+            <div class="ic ic-danger" style="width:56px;height:56px;border-radius:14px;display:grid;place-items:center;margin:0 auto 18px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <h2 style="font-size:22px;font-weight:800;margin-bottom:8px;">Access denied</h2>
+            <p class="text-muted" style="margin-bottom:22px;">You don't have permission to view this page.</p>
+            <a th:href="@{/login}" class="btn btn-primary">Back to sign in</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Pending Approvals')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: adminSidebar('pending')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Pending Approvals', 'Super Admin Console')}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Pending approvals</h2>
+                    <p>New lenders waiting for review. They cannot sign in until approved.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body flush">
+                    <div class="table-wrap">
+                        <table class="data">
+                            <thead>
+                            <tr><th>Business</th><th>Owner</th><th>Phone</th><th>Email</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="l : ${lenders}">
+                                <td>
+                                    <div class="cell-user">
+                                        <div class="avatar" th:text="${#strings.substring(l.businessName,0,1)}">B</div>
+                                        <div><div class="nm" th:text="${l.businessName}">Business</div></div>
+                                    </div>
+                                </td>
+                                <td th:text="${l.user.fullName}">Owner</td>
+                                <td th:text="${l.user.phone}">+255</td>
+                                <td th:text="${l.user.email != null ? l.user.email : '—'}">—</td>
+                                <td><a th:href="@{'/admin/lenders/' + ${l.id}}" class="btn btn-primary btn-sm">Review</a></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(lenders)}">
+                                <td colspan="5" class="t-empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <div>No lenders pending approval.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

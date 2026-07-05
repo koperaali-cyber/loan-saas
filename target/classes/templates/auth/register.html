@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Register your business')}"></head>
+<body>
+
+<div class="auth-page">
+    <aside class="auth-aside">
+        <div class="auth-brand">
+            <div class="logo">L</div>
+            <div class="name">LoanSaaS</div>
+        </div>
+        <div class="auth-hero">
+            <h1>Start lending smarter today.</h1>
+            <p>Register your microfinance business and, once approved by our team, get your own secure space to manage customers and loans.</p>
+            <div class="auth-features">
+                <div class="auth-feature">
+                    <span class="dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Your own isolated tenant workspace
+                </div>
+                <div class="auth-feature">
+                    <span class="dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Unlimited customers and loans
+                </div>
+                <div class="auth-feature">
+                    <span class="dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    Free to get started
+                </div>
+            </div>
+        </div>
+        <div class="auth-foot">Secure multi-tenant platform · Dar es Salaam, Tanzania</div>
+    </aside>
+
+    <main class="auth-main">
+        <div class="auth-card">
+            <div class="mobile-brand">
+                <div class="logo">L</div>
+                <div class="name">LoanSaaS</div>
+            </div>
+            <h2>Register your business</h2>
+            <p class="lead">Create a lender account. It will be activated after Super Admin approval.</p>
+
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <form th:action="@{/register}" th:object="${registration}" method="post" enctype="multipart/form-data">
+                <div class="photo-input" style="margin-bottom:20px;">
+                    <div class="photo-preview" id="photoPlaceholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                    <div class="field" style="flex:1;">
+                        <label>Business logo / photo <span class="hint">(optional)</span></label>
+                        <input type="file" th:field="*{profilePhoto}" accept="image/*"
+                               data-photo-input data-photo-target="photoPlaceholder">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Your full name <span class="req">*</span></label>
+                        <input type="text" th:field="*{fullName}" th:classappend="${#fields.hasErrors('fullName')} ? 'invalid'" placeholder="e.g. Amina Hassan">
+                        <span class="err" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                    </div>
+                    <div class="field">
+                        <label>Business name <span class="req">*</span></label>
+                        <input type="text" th:field="*{businessName}" th:classappend="${#fields.hasErrors('businessName')} ? 'invalid'" placeholder="e.g. Umoja Microfinance">
+                        <span class="err" th:if="${#fields.hasErrors('businessName')}" th:errors="*{businessName}"></span>
+                    </div>
+                    <div class="field">
+                        <label>Phone number <span class="req">*</span></label>
+                        <input type="text" th:field="*{phone}" th:classappend="${#fields.hasErrors('phone')} ? 'invalid'" placeholder="+255712345678">
+                        <span class="hint">Format: +255XXXXXXXXX</span>
+                        <span class="err" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                    </div>
+                    <div class="field">
+                        <label>Email <span class="hint">(optional)</span></label>
+                        <input type="email" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'invalid'" placeholder="you@example.com">
+                        <span class="err" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+                    <div class="field">
+                        <label>Password <span class="req">*</span></label>
+                        <input type="password" th:field="*{password}" th:classappend="${#fields.hasErrors('password')} ? 'invalid'" placeholder="At least 6 characters">
+                        <span class="err" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    </div>
+                    <div class="field">
+                        <label>Confirm password <span class="req">*</span></label>
+                        <input type="password" th:field="*{confirmPassword}" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'invalid'" placeholder="Re-enter password">
+                        <span class="err" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:22px;">Create account</button>
+            </form>
+
+            <div class="auth-switch">
+                Already have an account? <a th:href="@{/login}">Sign in</a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

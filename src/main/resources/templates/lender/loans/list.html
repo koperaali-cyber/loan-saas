@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Loans')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('loans')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Loans', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Loans</h2>
+                    <p>All loans you have issued.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/lender/loans/export/pdf}" class="btn btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        PDF
+                    </a>
+                    <a th:href="@{/lender/loans/export/excel}" class="btn btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Excel
+                    </a>
+                    <a th:href="@{/lender/loans/new}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New loan
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <div class="search-box" style="margin:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Search loans..." data-table-filter="loansTable">
+                    </div>
+                    <span class="sub" th:text="${#lists.size(loans)} + ' loan(s)'">0</span>
+                </div>
+                <div class="card-body flush">
+                    <div class="table-wrap">
+                        <table class="data" id="loansTable">
+                            <thead>
+                            <tr><th data-sort>Customer</th><th data-sort>Amount</th><th data-sort>Rate</th><th data-sort>Repayment</th><th data-sort>Balance</th><th data-sort>Due date</th><th data-sort>Status</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ln : ${loans}" th:attr="data-href=@{'/lender/loans/' + ${ln.id}}">
+                                <td>
+                                    <div class="cell-user">
+                                        <div class="avatar" th:text="${#strings.substring(ln.customer.fullName,0,1)}">C</div>
+                                        <div><div class="nm" th:text="${ln.customer.fullName}">Customer</div></div>
+                                    </div>
+                                </td>
+                                <td class="num money-num" th:text="${#numbers.formatDecimal(ln.amount, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                <td class="num" th:text="${#numbers.formatDecimal(ln.interestRate, 0, 2)} + '%'">0%</td>
+                                <td class="num money-num" th:text="${#numbers.formatDecimal(ln.totalRepayment, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                <td class="num money-num" th:text="${#numbers.formatDecimal(ln.remainingBalance, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                <td th:text="${#temporals.format(ln.dueDate, 'dd MMM yyyy')}">due</td>
+                                <td><span th:replace="~{fragments/layout :: statusBadge(${ln.status})}"></span></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(loans)}">
+                                <td colspan="7" class="t-empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                                    <div>No loans yet. Issue your first loan.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

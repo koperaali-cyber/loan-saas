@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' · LoanSaaS'">LoanSaaS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</th:block>
+
+<div th:fragment="topbar(pageTitle,greeting)" class="topbar">
+    <button class="hamburger" id="hamburger">
+        ☰
+    </button>
+
+    <h1 th:text="${pageTitle}"></h1>
+
+    <div class="spacer"></div>
+
+    <span th:if="${greeting}" th:text="${greeting}"></span>
+</div>
+
+<div th:fragment="alerts">
+
+    <div class="alert alert-success" th:if="${success}">
+        <span th:text="${success}"></span>
+    </div>
+
+    <div class="alert alert-error" th:if="${error}">
+        <span th:text="${error}"></span>
+    </div>
+
+</div>
+
+</body>
+</html>

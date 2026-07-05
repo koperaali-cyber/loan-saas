@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Payments')}"></head>
+<body>
+
+<div class="app">
+    <div th:replace="~{fragments/sidebar :: lenderSidebar('payments')}"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Payments', ${lender != null ? lender.businessName : ''})}"></div>
+
+        <div class="content">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="page-head">
+                <div class="titles">
+                    <h2>Payments</h2>
+                    <p>All repayments received.</p>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/lender/payments/new}" class="btn btn-money">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Record payment
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <div class="search-box" style="margin:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Search payments..." data-table-filter="payTable">
+                    </div>
+                    <span class="sub" th:text="${#lists.size(payments)} + ' payment(s)'">0</span>
+                </div>
+                <div class="card-body flush">
+                    <div class="table-wrap">
+                        <table class="data" id="payTable">
+                            <thead>
+                            <tr><th data-sort>Date</th><th data-sort>Customer</th><th data-sort>Amount paid</th><th data-sort>Balance after</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="p : ${payments}" th:attr="data-href=@{'/lender/loans/' + ${p.loan.id}}">
+                                <td th:text="${#temporals.format(p.paymentDate, 'dd MMM yyyy')}">date</td>
+                                <td>
+                                    <div class="cell-user">
+                                        <div class="avatar" th:text="${#strings.substring(p.loan.customer.fullName,0,1)}">C</div>
+                                        <div><div class="nm" th:text="${p.loan.customer.fullName}">Customer</div></div>
+                                    </div>
+                                </td>
+                                <td class="num money-num" th:text="${#numbers.formatDecimal(p.amountPaid, 0, 'COMMA', 0, 'POINT')}">0</td>
+                                <td class="num money-num" th:text="${p.balanceAfter != null ? #numbers.formatDecimal(p.balanceAfter, 0, 'COMMA', 0, 'POINT') : '—'}">0</td>
+                                <td><a th:href="@{'/lender/loans/' + ${p.loan.id}}" class="btn btn-ghost btn-sm">View loan</a></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(payments)}">
+                                <td colspan="5" class="t-empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                    <div>No payments recorded yet.</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

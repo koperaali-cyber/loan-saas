@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Loan Management for Tanzania')}"></head>
+<body>
+
+<nav class="landing-nav">
+    <div class="brand">
+        <div class="logo">L</div>
+        <div class="name">LoanSaaS</div>
+    </div>
+    <div class="nav-actions">
+        <a th:href="@{/login}" class="btn btn-ghost">Sign in</a>
+        <a th:href="@{/register}" class="btn btn-primary">Get started</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="eyebrow">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Built for Tanzanian microfinance
+    </div>
+    <h1>Manage your loans, <span class="grad">grow your lending business</span></h1>
+    <p>A complete multi-tenant platform for lenders across Tanzania. Register customers, issue loans in TZS, track repayments, and monitor risk — all in one secure place.</p>
+    <div class="cta-row">
+        <a th:href="@{/register}" class="btn btn-primary btn-lg">Register your business</a>
+        <a th:href="@{/login}" class="btn btn-ghost btn-lg">Sign in</a>
+    </div>
+</section>
+
+<section class="landing-features">
+    <div class="feat-card">
+        <div class="fic ic-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Customer registry</h3>
+        <p>Register borrowers with NIDA and phone verification. Duplicate detection prevents fraud across the whole platform.</p>
+    </div>
+    <div class="feat-card">
+        <div class="fic ic-money">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Loan tracking in TZS</h3>
+        <p>Issue loans with automatic interest and repayment calculation. Every payment updates the balance and status instantly.</p>
+    </div>
+    <div class="feat-card">
+        <div class="fic ic-warn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>Risk scoring</h3>
+        <p>Automatic LOW / MEDIUM / HIGH risk levels based on repayment history so you lend with confidence.</p>
+    </div>
+    <div class="feat-card">
+        <div class="fic ic-info">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>PDF &amp; Excel reports</h3>
+        <p>Export your loan book to PDF or Excel in one click. Perfect for records, audits and board meetings.</p>
+    </div>
+    <div class="feat-card">
+        <div class="fic ic-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>Secure &amp; isolated</h3>
+        <p>Each lender's data is fully isolated. No lender can ever see another's customers, loans or payments.</p>
+    </div>
+    <div class="feat-card">
+        <div class="fic ic-money">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>Live dashboards</h3>
+        <p>See customers, active loans, money issued and collected at a glance with visual charts and clear metrics.</p>
+    </div>
+</section>
+
+<footer class="landing-foot">
+    &copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> LoanSaaS · Multi-tenant loan management for Tanzania · Amounts in TZS
+</footer>
+
+</body>
+</html>
